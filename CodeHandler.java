@@ -1,10 +1,30 @@
-public class CodeHandler {
-    //codeHandler holds the BASIC file
-    private String codeHandler;
-    //index holds the position
-    private int index;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
-    char peek(int i) {//looks “i” characters ahead and returns that character; doesn’t move the index
+public class CodeHandler {
+
+    //filepath which grabs the filename in the arguments
+    Path filePath = Paths.get(Basic.arguments);
+    //codeHandler holds the BASIC file
+
+
+    private static String codeHandler;
+    //Tries to read from file and put the data in the codehandler.
+    {
+        try {
+            codeHandler = new String(Files.readAllBytes(filePath));
+        } catch (IOException fileException) {
+            System.out.println(fileException);
+            throw new RuntimeException(fileException);
+        }
+    }
+
+    //index holds the position
+    private static int index;
+
+    static char peek(int i) {//looks “i” characters ahead and returns that character; doesn’t move the index
        return codeHandler.charAt(i + index);
     }
     String peekString(int i){//returns a string of the next “i” characters but doesn’t move the index
@@ -17,14 +37,14 @@ public class CodeHandler {
         }
         return peekStringBuffer;
     }
-    char GetChar(int i){//returns the next character and moves the index
+    static char GetChar(int i){//returns the next character and moves the index
         index += 1;
         return codeHandler.charAt(index);
     }
     void Swallow(int i){//moves the index ahead “i” positions
         index += i;
     }
-    boolean IsDone(){//returns true if we are at the end of the document
+    static boolean IsDone(){//returns true if we are at the end of the document
         if (index == codeHandler.length()){
             return true;
         }

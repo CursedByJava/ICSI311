@@ -1,14 +1,20 @@
 public class Basic {
+
+    public static String arguments;
     public static void main(String[] args) throws Exception {
+
         //Main must ensure there's only one argument.
         //If more than 1, print error message and exit.
-        if (args.length != 0) {
+        if (args.length != 1) {
             //Error message
-            throw new Exception("Error: more than one argument!");
+            throw new Exception("Error: more than one argument: " + args);
         }
         else {
+            //sets arguments to the filename
+            arguments = args[0];
             //RUN CODE
-            System.out.println("Hello World32");
+            Lexer lexer = new Lexer();
+            lexer.lex(arguments);
         }
      }
 }
