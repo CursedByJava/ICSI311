@@ -2,6 +2,10 @@ import java.util.LinkedList;
 
 public class Lexer {
 
+    enum states {
+        LETTER, DIGIT, INITIAL, SPACE, ENDOFLINE, TAB, NEWLINE
+    }
+
     public static LinkedList lex(String filename) {
 
         LinkedList<Token> TokenList = new LinkedList<Token>();
@@ -12,72 +16,73 @@ public class Lexer {
         int characterPosition;
 
         CodeHandler code = new CodeHandler();
-        char currentChar = code.peek(0);
+        char currentChar = code.peek(0);;
+        states currentState = states.INITIAL;
 
+        if (!code.IsDone()) {
+            for (int i=0; i<filename.length();i++) {
 
-        String currentState = "initial";
+                System.out.println(currentChar);
+//                currentChar = code.GetChar(1);
 
-        while (!code.IsDone()) {
+                switch (currentState) {
 
+                    case INITIAL:
+                        if(Character.isLetter(currentChar)){
+                            //change the state to letter
+                            currentState = states.LETTER;
+                            ProcessWord(currentChar);
+                        }
+                        else if(Character.isDigit(currentChar)){
+                            currentState = states.DIGIT;
+                        }
+                        else if((Character.isSpaceChar(currentChar)) | (currentChar == '\t')) {
+                            currentState = states.SPACE;
+                        }
+                        else if(currentChar == '\n') {
+                            currentState = states.ENDOFLINE;
+                        }
 
+                    case LETTER:
+                        //add the letter to currentchar, then if its not a letter move on
+                        if(Character.isAlphabetic(code.peek(1)) | (code.peek(1) == '_') | (code.peek(1) == '$') | (code.peek(1) == '%')) {
+                            currentChar = code.GetChar(1);
+                            ProcessWord(currentChar);
+                        }
+                        else {
+                            currentChar = code.GetChar(1);
+                            currentState = states.INITIAL;
+                            charString = new StringBuilder();
+                        }
 
-            switch (currentState) {
+                    case DIGIT:
 
-                case "initial":
-                    if (Character.isLetter(currentChar)) {
-                        currentState = "letter";
-                        System.out.println(currentChar + " " + currentState);
-                    }
-                    else if (Character.isDigit(currentChar)) {
-                        currentState = "number";
-                        System.out.println(currentChar + " " + currentState);
-                    }
-                    else if (currentChar == '\n') {
-                        currentState = "EOL";
-                    }
-                    else if ((currentChar == ' ') | currentChar == '\t') {
-                        currentState = "space";
-                        System.out.println("SPACE " + currentChar + currentState);
-                    }
-                    else {
-                        System.out.println("BREAK");
-                    }
-                    break;
-
-                case "space":
-
-                case "letter":
-                    TokenList.add(ProcessWord(currentChar));
-                    currentChar = code.GetChar(1);
-                    currentState = "initial";
-
-                case "number":
-                    System.out.println("HERE");
-
-                case "EOL":
-
-
+                    case SPACE, TAB:
+                        if(!Character.isSpaceChar(code.peek(1))){
+                            currentChar = code.GetChar(1);
+                            currentState = states.INITIAL;
+                        }
+                    case ENDOFLINE:
+                }
             }
         }
+        System.out.println(TokenList);
+//        while (!code.IsDone()) {
+//            switch (currentState) {
+//            }
+//
+//        }
         return null;
     }
 
+    private static StringBuilder charString = new StringBuilder();
     static Token ProcessWord(char convertedChar) {
-        String charString = "";
-
-        boolean isLetter = Character.isLetter(convertedChar);
-        boolean isNumber = Character.isDigit(convertedChar);
-        boolean isUnderscore = (convertedChar == '_');
-        boolean isMoneySign =  (convertedChar == '$');
-        boolean isPercentage = (convertedChar == '%');
-
-        if (isLetter | isNumber |isUnderscore | isMoneySign | isPercentage) {
-            charString += convertedChar;
+        if((Character.isAlphabetic(convertedChar) | (convertedChar == '_') | (convertedChar == '$') | (convertedChar== '%'))) {
+            charString.append(convertedChar);
         }
         else {
-           return new Token(Token.TokenType.WORD, Token.lineNumber, Token.characterPosition, charString);
+            return new Token(Token.TokenType.WORD, Token.lineNumber, Token.characterPosition, charString.toString());
         }
-
         return null;
     }
 }
