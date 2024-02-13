@@ -47,12 +47,12 @@ public class Lexer {
                         //add the letter to currentchar, then if its not a letter move on
                         if(Character.isAlphabetic(code.peek(1)) | (code.peek(1) == '_') | (code.peek(1) == '$') | (code.peek(1) == '%')) {
                             currentChar = code.GetChar(1);
-                            ProcessWord(currentChar);
                         }
                         else {
                             currentChar = code.GetChar(1);
                             currentState = states.INITIAL;
                             charString = new StringBuilder();
+                            ProcessWord(currentChar);
                         }
 
                     case DIGIT:
@@ -67,11 +67,6 @@ public class Lexer {
             }
         }
         System.out.println(TokenList);
-//        while (!code.IsDone()) {
-//            switch (currentState) {
-//            }
-//
-//        }
         return null;
     }
 
