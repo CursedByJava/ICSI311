@@ -1,0 +1,7 @@
+IF x < 6 THEN xIsSmaller
+IF x < 11 THEN xIsLarger
+xIsSmaller: PRINT “x is a number between 1-5”
+GOTO endLabel
+xIsLarger: PRINT “x is a number between 5-10”
+GOTO endLabel
+endLabel: END
