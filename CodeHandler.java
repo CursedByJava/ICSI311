@@ -21,6 +21,14 @@ public class CodeHandler {
         }
     }
 
+    public static String file() {
+        return codeHandler;
+    }
+
+    public static void fileIndex(int currentIndex){
+        index = currentIndex;
+    }
+
     //index holds the position
     private static int index;
 
@@ -45,10 +53,12 @@ public class CodeHandler {
         index += i;
     }
     static boolean IsDone(){//returns true if we are at the end of the document
-        if (index == codeHandler.length()){
+        if (index == codeHandler.length() - 1){
+            System.out.println("=========================" + "\n FILE IS DONE \n" +  "=========================");
             return true;
         }
         else {
+//            System.out.println("FILE IS !DONE" + index);
             return false;
         }
     }

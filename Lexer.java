@@ -12,81 +12,88 @@ public class Lexer {
         System.out.println("FILE NAME: " + filename);
 
         //Holds the line number and character position (duh)
-        int lineNumber;
         int characterPosition;
 
-        CodeHandler code = new CodeHandler();
-        char currentChar = code.peek(0);
-        states currentState = states.INITIAL;
-        StringBuilder testString = new StringBuilder();
+        int index = 0;
 
-        StringBuilder charString = new StringBuilder();
+        CodeHandler code = new CodeHandler();
+        String file = code.file();
+        char currentChar = file.charAt(index);
+        states currentState = states.INITIAL;
+
+        int lineNumber = 0;
 
         //State machine HERE
-        if (!code.IsDone()) {
-            for (int i=0; i<filename.length();i++) {
-
-                switch (currentState) {
-
-                    //DONE
-                    case INITIAL:
-
+        while (!code.IsDone()) {
+            switch (currentState) {
+                case INITIAL:
+                    if (Character.isAlphabetic(currentChar)) {
+                        System.out.println(currentChar + " LETTER");
+                        currentState = states.LETTER;
+                        break;
+                    }
+                    else if (Character.isDigit(currentChar)) {
+                        System.out.println(currentChar + " DIGIT");
+                        currentState = states.DIGIT;
+                        break;
+                    }
+                    else if (Character.isSpaceChar(currentChar) | currentChar == '\t'){
+                        System.out.println("SPACE OR TAB");
+                        currentState = states.SPACE;
+                        break;
+                    }
+                    else if(currentChar == '\n') {
+                        System.out.println("NEWLINE");
+                        lineNumber++;
+                        TokenList.add(new Token(Token.TokenType.ENDOFLINE, lineNumber ,Token.characterPosition));
+                        currentChar = code.GetChar(1);
+                        currentState = states.INITIAL;
+                        break;
+                    }
+                    else {
                         System.out.println(currentChar);
-                        if(Character.isLetter(currentChar)){
-                            //change the state to letter
-                            currentState = states.LETTER;
-                            charString.append(currentChar);
-                        }
-                        else if(Character.isDigit(currentChar)){
-                            currentState = states.DIGIT;
-                        }
-                        else if((Character.isSpaceChar(currentChar)) | (currentChar == '\t')) {
-                            currentState = states.SPACE;
-                        }
-                        else if(currentChar == '\n') {
-                            currentState = states.ENDOFLINE;
-                        }
-//                        else {
-//                            currentChar = code.GetChar(1);
-//                        }
+                        currentChar = code.GetChar(1);
+                        currentState = states.INITIAL;
+                        break;
+                    }
+                case LETTER:
+                    if (Character.isAlphabetic(code.peek(1))) {
+                        currentChar = code.GetChar(1);
+                        System.out.println(currentChar + " LETTER");
+                        break;
+                    }
+                    else {
+                        currentChar = code.GetChar(1);
+                        currentState = states.INITIAL;
+                        break;
+                    }
+                case DIGIT:
+                    if (Character.isDigit(code.peek(1))){
+                        currentChar = code.GetChar(1);
+                        System.out.println(currentChar + " DIGIT");
+                        break;
+                    }
+                    else {
+                        currentChar = code.GetChar(1);
+                        currentState = states.INITIAL;
+                        break;
+                    }
 
-                        //DONE
-                    case LETTER:
-                        //add the letter to currentchar, then if its not a letter move on
-                        if(Character.isLetter(code.peek(1)) | (code.peek(1) == '_') | (code.peek(1) == '$') | (code.peek(1) == '%')) {
-                            currentChar = code.GetChar(1);
-                            charString.append(currentChar);
-                        }
-                        else {
-                            currentChar = code.GetChar(1);
-                            TokenList.add(ProcessWord(charString.toString()));
-                            charString = new StringBuilder();
-                            currentState = states.INITIAL;
-                            break;
-                        }
-
-                    case DIGIT:
-                        if(Character.isDigit(code.peek(1))) {
-
-                        }
-                        else {
-                            currentState = states.INITIAL;
-                        }
-
-                    case SPACE, TAB:
-                        if((Character.isSpaceChar(code.peek(1)) | (code.peek(1) == '\t'))) {
-                            currentChar = code.GetChar(1);
-                            currentState = states.INITIAL;
-                        }
-                    case ENDOFLINE:
-                }
+                case SPACE:
+                        currentChar = code.GetChar(1);
+                        currentState = states.INITIAL;
+                        break;
             }
-        }
+
+
+            }
+
+//        static Token ProcessWord(String process) {
+//
+//            return new Token(Token.TokenType.WORD, Token.lineNumber, Token.characterPosition, process);
+//        }
         System.out.println(TokenList);
         return null;
     }
 
-    static Token ProcessWord(String processString) {
-        return new Token(Token.TokenType.WORD, Token.lineNumber, Token.characterPosition, processString);
-    }
 }
