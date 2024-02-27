@@ -16,22 +16,26 @@ public class Lexer {
         int characterPosition;
 
         CodeHandler code = new CodeHandler();
-        char currentChar = code.peek(0);;
+        char currentChar = code.peek(0);
         states currentState = states.INITIAL;
+        StringBuilder testString = new StringBuilder();
 
+        StringBuilder charString = new StringBuilder();
+
+        //State machine HERE
         if (!code.IsDone()) {
             for (int i=0; i<filename.length();i++) {
 
-                System.out.println(currentChar);
-//                currentChar = code.GetChar(1);
-
                 switch (currentState) {
 
+                    //DONE
                     case INITIAL:
+
+                        System.out.println(currentChar);
                         if(Character.isLetter(currentChar)){
                             //change the state to letter
                             currentState = states.LETTER;
-                            ProcessWord(currentChar);
+                            charString.append(currentChar);
                         }
                         else if(Character.isDigit(currentChar)){
                             currentState = states.DIGIT;
@@ -42,23 +46,35 @@ public class Lexer {
                         else if(currentChar == '\n') {
                             currentState = states.ENDOFLINE;
                         }
+//                        else {
+//                            currentChar = code.GetChar(1);
+//                        }
 
+                        //DONE
                     case LETTER:
                         //add the letter to currentchar, then if its not a letter move on
-                        if(Character.isAlphabetic(code.peek(1)) | (code.peek(1) == '_') | (code.peek(1) == '$') | (code.peek(1) == '%')) {
+                        if(Character.isLetter(code.peek(1)) | (code.peek(1) == '_') | (code.peek(1) == '$') | (code.peek(1) == '%')) {
                             currentChar = code.GetChar(1);
-                            ProcessWord(currentChar);
+                            charString.append(currentChar);
                         }
                         else {
                             currentChar = code.GetChar(1);
-                            currentState = states.INITIAL;
+                            TokenList.add(ProcessWord(charString.toString()));
                             charString = new StringBuilder();
+                            currentState = states.INITIAL;
+                            break;
                         }
 
                     case DIGIT:
+                        if(Character.isDigit(code.peek(1))) {
+
+                        }
+                        else {
+                            currentState = states.INITIAL;
+                        }
 
                     case SPACE, TAB:
-                        if(!Character.isSpaceChar(code.peek(1))){
+                        if((Character.isSpaceChar(code.peek(1)) | (code.peek(1) == '\t'))) {
                             currentChar = code.GetChar(1);
                             currentState = states.INITIAL;
                         }
@@ -67,22 +83,10 @@ public class Lexer {
             }
         }
         System.out.println(TokenList);
-//        while (!code.IsDone()) {
-//            switch (currentState) {
-//            }
-//
-//        }
         return null;
     }
 
-    private static StringBuilder charString = new StringBuilder();
-    static Token ProcessWord(char convertedChar) {
-        if((Character.isAlphabetic(convertedChar) | (convertedChar == '_') | (convertedChar == '$') | (convertedChar== '%'))) {
-            charString.append(convertedChar);
-        }
-        else {
-            return new Token(Token.TokenType.WORD, Token.lineNumber, Token.characterPosition, charString.toString());
-        }
-        return null;
+    static Token ProcessWord(String processString) {
+        return new Token(Token.TokenType.WORD, Token.lineNumber, Token.characterPosition, processString);
     }
 }
