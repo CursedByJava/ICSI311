@@ -6,10 +6,17 @@ public class Lexer {
         LETTER, DIGIT, INITIAL, SPACE, ENDOFLINE, TAB, NEWLINE
     }
 
+
+
+    static Token ProcessWord(String process) {
+        return new Token(Token.TokenType.WORD, Token.lineNumber, Token.characterPosition, process);
+    }
     public static LinkedList lex(String filename) {
 
+        String wordBuffer = "";
+
         LinkedList<Token> TokenList = new LinkedList<Token>();
-        System.out.println("FILE NAME: " + filename);
+        System.out.println("============================\nFILE NAME:" + filename + "\n============================");
 
         //Holds the line number and character position (duh)
         int characterPosition;
@@ -30,27 +37,24 @@ public class Lexer {
                     if (Character.isAlphabetic(currentChar)) {
                         System.out.println(currentChar + " LETTER");
                         currentState = states.LETTER;
+                        wordBuffer += currentChar;
                         break;
-                    }
-                    else if (Character.isDigit(currentChar)) {
+                    } else if (Character.isDigit(currentChar)) {
                         System.out.println(currentChar + " DIGIT");
                         currentState = states.DIGIT;
                         break;
-                    }
-                    else if (Character.isSpaceChar(currentChar) | currentChar == '\t'){
+                    } else if (Character.isSpaceChar(currentChar) | currentChar == '\t') {
                         System.out.println("SPACE OR TAB");
                         currentState = states.SPACE;
                         break;
-                    }
-                    else if(currentChar == '\n') {
+                    } else if (currentChar == '\n') {
                         System.out.println("NEWLINE");
                         lineNumber++;
-                        TokenList.add(new Token(Token.TokenType.ENDOFLINE, lineNumber ,Token.characterPosition));
+                        TokenList.add(new Token(Token.TokenType.ENDOFLINE, lineNumber, Token.characterPosition));
                         currentChar = code.GetChar(1);
                         currentState = states.INITIAL;
                         break;
-                    }
-                    else {
+                    } else {
                         System.out.println(currentChar);
                         currentChar = code.GetChar(1);
                         currentState = states.INITIAL;
@@ -60,40 +64,33 @@ public class Lexer {
                     if (Character.isAlphabetic(code.peek(1))) {
                         currentChar = code.GetChar(1);
                         System.out.println(currentChar + " LETTER");
+                        wordBuffer += currentChar;
                         break;
-                    }
-                    else {
+                    } else {
                         currentChar = code.GetChar(1);
                         currentState = states.INITIAL;
+                        ProcessWord(wordBuffer);
+                        wordBuffer = "";
                         break;
                     }
                 case DIGIT:
-                    if (Character.isDigit(code.peek(1))){
+                    if (Character.isDigit(code.peek(1))) {
                         currentChar = code.GetChar(1);
                         System.out.println(currentChar + " DIGIT");
                         break;
-                    }
-                    else {
+                    } else {
                         currentChar = code.GetChar(1);
                         currentState = states.INITIAL;
                         break;
                     }
-
                 case SPACE:
-                        currentChar = code.GetChar(1);
-                        currentState = states.INITIAL;
-                        break;
+                    currentChar = code.GetChar(1);
+                    currentState = states.INITIAL;
+                    break;
             }
-
-
-            }
-
-//        static Token ProcessWord(String process) {
-//
-//            return new Token(Token.TokenType.WORD, Token.lineNumber, Token.characterPosition, process);
-//        }
+        }
         System.out.println(TokenList);
-        return null;
+        return TokenList;
     }
 
 }
