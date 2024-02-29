@@ -135,6 +135,7 @@ public class Lexer {
             System.out.println("NUMBER: " + numberBuffer);
         }
 
+        System.out.println("=========================" + "\n FILE IS DONE \n" +  "=========================");
         System.out.println(TokenList.toString());
         return TokenList;
     }

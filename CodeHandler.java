@@ -56,8 +56,6 @@ public class CodeHandler {
     }
     boolean IsDone(){//returns true if we are at the end of the document
         if (index == codeHandler.length() - 1){
-
-            System.out.println("=========================" + "\n FILE IS DONE \n" +  "=========================");
             return true;
         }
         else {
