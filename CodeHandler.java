@@ -25,12 +25,14 @@ public class CodeHandler {
         return codeHandler;
     }
 
-    public static void fileIndex(int currentIndex){
-        index = currentIndex;
+    public static int fileIndex(){
+        return index;
     }
 
     //index holds the position
     private static int index;
+
+    public static int publicIndex = index;
 
     static char peek(int i) {//looks “i” characters ahead and returns that character; doesn’t move the index
        return codeHandler.charAt(i + index);
@@ -54,7 +56,14 @@ public class CodeHandler {
     }
     static boolean IsDone(){//returns true if we are at the end of the document
         if (index == codeHandler.length() - 1){
+            //Prints out last word if the buffer isn't empty
+            if (Lexer.wordBuffer != "") {
+                Lexer.TokenList.add(new Token(Token.TokenType.WORD, Lexer.lineNumber, Lexer.index, Lexer.wordBuffer));
+                System.out.println("WORD: " + Lexer.wordBuffer);
+            }
+
             System.out.println("=========================" + "\n FILE IS DONE \n" +  "=========================");
+            System.out.println(Lexer.TokenList);
             return true;
         }
         else {

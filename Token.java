@@ -14,6 +14,7 @@ public class Token {
         tokenType = type;
         lineNumber = line;
         characterPosition = pos;
+        System.out.println(toString());
     }
 
     //Creates a token with no value
@@ -28,5 +29,7 @@ public class Token {
         String tokenString = "Token Name: " + tokenType + " Token Value: " + tokenValue + " Line Number: " + lineNumber + " Position: " + characterPosition + "\n";
         return tokenString;
     }
+
+
 
 }

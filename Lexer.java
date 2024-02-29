@@ -3,58 +3,66 @@ import java.util.LinkedList;
 public class Lexer {
 
     enum states {
-        LETTER, DIGIT, INITIAL, SPACE, ENDOFLINE, TAB, NEWLINE
+        LETTER, DIGIT, INITIAL, SPACE,
     }
 
+    public static int lineNumber = 1;
 
+    public static LinkedList<Token> TokenList = new LinkedList<>();
+    public static int index = CodeHandler.fileIndex();
+
+    public static Token newToken = null;
 
     static Token ProcessWord(String process) {
-        return new Token(Token.TokenType.WORD, Token.lineNumber, Token.characterPosition, process);
+        newToken = new Token(Token.TokenType.WORD,1,1,process);
+        return newToken;
     }
+    public static String wordBuffer = "";
     public static LinkedList lex(String filename) {
 
-        String wordBuffer = "";
 
-        LinkedList<Token> TokenList = new LinkedList<Token>();
         System.out.println("============================\nFILE NAME:" + filename + "\n============================");
 
         //Holds the line number and character position (duh)
         int characterPosition;
-
-        int index = 0;
 
         CodeHandler code = new CodeHandler();
         String file = code.file();
         char currentChar = file.charAt(index);
         states currentState = states.INITIAL;
 
-        int lineNumber = 0;
 
         //State machine HERE
         while (!code.IsDone()) {
             switch (currentState) {
                 case INITIAL:
                     if (Character.isAlphabetic(currentChar)) {
-                        System.out.println(currentChar + " LETTER");
+                        System.out.println(currentChar + " LETTER" + " INDEX: " + CodeHandler.publicIndex);
                         currentState = states.LETTER;
                         wordBuffer += currentChar;
                         break;
-                    } else if (Character.isDigit(currentChar)) {
+                    }
+                    else if (Character.isDigit(currentChar)) {
                         System.out.println(currentChar + " DIGIT");
                         currentState = states.DIGIT;
                         break;
-                    } else if (Character.isSpaceChar(currentChar) | currentChar == '\t') {
+                    }
+                    else if (Character.isSpaceChar(currentChar) | currentChar == '\t') {
                         System.out.println("SPACE OR TAB");
                         currentState = states.SPACE;
                         break;
-                    } else if (currentChar == '\n') {
+                    }
+                    else if (currentChar == '\n') {
                         System.out.println("NEWLINE");
                         lineNumber++;
-                        TokenList.add(new Token(Token.TokenType.ENDOFLINE, lineNumber, Token.characterPosition));
+                        //Same as processword with no value
+
+                        TokenList.add(new Token(Token.TokenType.ENDOFLINE, lineNumber, index));
                         currentChar = code.GetChar(1);
                         currentState = states.INITIAL;
                         break;
-                    } else {
+                    }
+                    else {
                         System.out.println(currentChar);
                         currentChar = code.GetChar(1);
                         currentState = states.INITIAL;
@@ -66,10 +74,13 @@ public class Lexer {
                         System.out.println(currentChar + " LETTER");
                         wordBuffer += currentChar;
                         break;
-                    } else {
+                    }
+                    else {
+                        ProcessWord(wordBuffer);
+                        TokenList.add(newToken);
                         currentChar = code.GetChar(1);
                         currentState = states.INITIAL;
-                        ProcessWord(wordBuffer);
+                        System.out.println("WORD: " + wordBuffer);
                         wordBuffer = "";
                         break;
                     }
@@ -78,7 +89,8 @@ public class Lexer {
                         currentChar = code.GetChar(1);
                         System.out.println(currentChar + " DIGIT");
                         break;
-                    } else {
+                    }
+                    else {
                         currentChar = code.GetChar(1);
                         currentState = states.INITIAL;
                         break;
@@ -89,7 +101,7 @@ public class Lexer {
                     break;
             }
         }
-        System.out.println(TokenList);
+
         return TokenList;
     }
 
