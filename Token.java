@@ -4,17 +4,16 @@ public class Token {
     public enum TokenType {
         WORD, NUMBER, ENDOFLINE
     }
-    static TokenType tokenType;
-    public static int lineNumber;
-    public static int characterPosition;
-    static String tokenValue;
+    TokenType tokenType;
+    public int lineNumber;
+    public int characterPosition;
+    String tokenValue;
 
     //Creates a token with a value
     public Token(TokenType type, int line, int pos) {
         tokenType = type;
         lineNumber = line;
         characterPosition = pos;
-        System.out.println(toString());
     }
 
     //Creates a token with no value
@@ -26,7 +25,7 @@ public class Token {
     }
 
     public String toString(){
-        String tokenString = "Token Name: " + tokenType + " Token Value: " + tokenValue + " Line Number: " + lineNumber + " Position: " + characterPosition + "\n";
+        String tokenString = tokenType + "(" + tokenValue + ")" + "[LINE: " + lineNumber + ", POS: " + characterPosition + "]" + "\n";
         return tokenString;
     }
 

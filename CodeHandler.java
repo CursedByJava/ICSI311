@@ -10,7 +10,7 @@ public class CodeHandler {
     //codeHandler holds the BASIC file
 
 
-    private static String codeHandler;
+    private String codeHandler;
     //Tries to read from file and put the data in the codehandler.
     {
         try {
@@ -21,7 +21,7 @@ public class CodeHandler {
         }
     }
 
-    public static String file() {
+    public String file() {
         return codeHandler;
     }
 
@@ -30,11 +30,11 @@ public class CodeHandler {
     }
 
     //index holds the position
-    private static int index;
+    static int index;
 
-    public static int publicIndex = index;
+    public int publicIndex = index;
 
-    static char peek(int i) {//looks “i” characters ahead and returns that character; doesn’t move the index
+    char peek(int i) {//looks “i” characters ahead and returns that character; doesn’t move the index
        return codeHandler.charAt(i + index);
     }
     String peekString(int i){//returns a string of the next “i” characters but doesn’t move the index
@@ -47,23 +47,17 @@ public class CodeHandler {
         }
         return peekStringBuffer;
     }
-    static char GetChar(int i){//returns the next character and moves the index
+    char GetChar(int i){//returns the next character and moves the index
         index += 1;
         return codeHandler.charAt(index);
     }
     void Swallow(int i){//moves the index ahead “i” positions
         index += i;
     }
-    static boolean IsDone(){//returns true if we are at the end of the document
+    boolean IsDone(){//returns true if we are at the end of the document
         if (index == codeHandler.length() - 1){
-            //Prints out last word if the buffer isn't empty
-            if (Lexer.wordBuffer != "") {
-                Lexer.TokenList.add(new Token(Token.TokenType.WORD, Lexer.lineNumber, Lexer.index, Lexer.wordBuffer));
-                System.out.println("WORD: " + Lexer.wordBuffer);
-            }
 
             System.out.println("=========================" + "\n FILE IS DONE \n" +  "=========================");
-            System.out.println(Lexer.TokenList);
             return true;
         }
         else {
