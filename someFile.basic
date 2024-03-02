@@ -1,7 +1,7 @@
 IF x < 6 THEN xIsS_$maller
-IF x < 11.6.9 THEN xIsLarger
-xIsSmaller: PRINT “x is a number between 1-5”
+IF x <= 11.6.9.8 + THEN xIsLarger
+xIsSmaller: PRINT “x is a number between 1-s”
 GOTO endLabel
-xIsLarger: PRINT “x is a number between 5-10”
+xIsLarger: <> PRINT “She said, \”hello there\” and then she left.”
 GOTO endLabel
-endLabel: END 54 888888888888
+endLabel: END 54 888888888888 “She said, \”hello there\” and then she left.” +dsdsdsd+=+=

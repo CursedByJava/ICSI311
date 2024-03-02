@@ -21,18 +21,18 @@ public class CodeHandler {
         }
     }
 
-    public String file() {
+    String file() {
         return codeHandler;
     }
 
-    public static int fileIndex(){
+    static int fileIndex(){
         return index;
     }
 
     //index holds the position
-    static int index;
+    private static int index;
 
-    public int publicIndex = index;
+    int Index = index;
 
     char peek(int i) {//looks “i” characters ahead and returns that character; doesn’t move the index
        return codeHandler.charAt(i + index);
@@ -48,7 +48,7 @@ public class CodeHandler {
         return peekStringBuffer;
     }
     char GetChar(int i){//returns the next character and moves the index
-        index += 1;
+        index += i;
         return codeHandler.charAt(index);
     }
     void Swallow(int i){//moves the index ahead “i” positions
@@ -65,7 +65,7 @@ public class CodeHandler {
     }
     String Remainder() {//returns the rest of the document as a string
         String restOfFile = "";
-        for (int i=0;i<codeHandler.length();i++){
+        for (int i=0;i<codeHandler.length()-index;i++){
             restOfFile += codeHandler.charAt(index + i);
         }
         return restOfFile;
