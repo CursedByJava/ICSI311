@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.function.ToLongBiFunction;
 
-public class Lexer {
+class Lexer {
 
     //Holds different values of states in the state machine
     enum states {

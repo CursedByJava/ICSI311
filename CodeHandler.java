@@ -3,7 +3,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-public class CodeHandler {
+class CodeHandler {
 
     //filepath which grabs the filename in the arguments
     Path filePath = Paths.get(Basic.arguments);

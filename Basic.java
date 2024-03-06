@@ -1,6 +1,6 @@
-public class Basic {
+class Basic {
 
-    public static String arguments;
+    static String arguments;
     public static void main(String[] args) throws Exception {
 
         //Main must ensure there's only one argument.
@@ -14,7 +14,9 @@ public class Basic {
             arguments = args[0];
             //RUN CODE
             Lexer lexer = new Lexer();
-            lexer.lex(arguments);
+            Parser parser = new Parser(lexer.lex(arguments));
+            parser.Parse();
+
         }
      }
 }
